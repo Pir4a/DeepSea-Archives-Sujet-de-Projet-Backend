@@ -6,7 +6,7 @@
 // Example:
 //   JWT_SECRET=dev-secret node scripts/generate-admin-token.js 1 ADMIN 50
 
-const { jwt } = require('@deepsea/common');
+/* const { jwt } = require('@deepsea/common');
 
 const userId = parseInt(process.argv[2] || '1', 10);
 const role = process.argv[3] || 'ADMIN';
@@ -28,4 +28,4 @@ console.log(`   Role: ${role}`);
 console.log(`   Reputation: ${reputation}`);
 console.log('\n💡 Swagger UI:');
 console.log(`   Click "Authorize" → paste: Bearer ${token}`);
-console.log('\n');
+console.log('\n'); */
