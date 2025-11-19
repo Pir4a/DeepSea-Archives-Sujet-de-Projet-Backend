@@ -1,0 +1,17 @@
+{
+  "name": "@deepsea/common",
+  "version": "0.1.0",
+  "description": "Common utilities (errors, JWT, middlewares, logger) shared across DeepSea microservices",
+  "main": "src/index.js",
+  "license": "MIT",
+  "type": "commonjs",
+  "scripts": {
+    "lint": "echo \"no lint configured for @deepsea/common\"",
+    "test": "node -e \"console.log('common package ok')\""
+  },
+  "dependencies": {
+    "jsonwebtoken": "^9.0.2"
+  }
+}
+
+
