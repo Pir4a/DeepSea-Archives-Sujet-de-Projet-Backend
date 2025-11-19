@@ -1,0 +1,56 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: deepsea-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: deepsea
+      POSTGRES_PASSWORD: deepsea
+      POSTGRES_DB: deepsea
+    ports:
+      - '5432:5432'
+    volumes:
+      - deepsea-postgres-data:/var/lib/postgresql/data
+    networks:
+      - deepsea-network
+
+  # Optionnel : interface d’admin pour PostgreSQL
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: deepsea-pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@deepsea.local
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - '5050:80'
+    depends_on:
+      - postgres
+    networks:
+      - deepsea-network
+
+  # Exemple de configuration pour un microservice (à activer quand le Dockerfile existera)
+  # observation-service:
+  #   build: ../services/observation-service
+  #   container_name: deepsea-observation-service
+  #   restart: unless-stopped
+  #   environment:
+  #     # URL utilisée par Prisma ou autre ORM
+  #     DATABASE_URL: postgresql://deepsea:deepsea@postgres:5432/deepsea?schema=public
+  #     JWT_SECRET: super-secret-change-me
+  #   depends_on:
+  #     - postgres
+  #   ports:
+  #     - '4002:4002'
+  #   networks:
+  #     - deepsea-network
+
+networks:
+  deepsea-network:
+    driver: bridge
+
+volumes:
+  deepsea-postgres-data:
+    driver: local
