@@ -1,11 +1,15 @@
 // Domaine : entité Species
 // TODO: implémenter les règles métier (unicité du nom, calcul de rarityScore, etc.)
 
-/**
- * Esquisse de fabrique d'entité Species.
- * Pour l'instant non utilisée, mais prête pour la couche application.
- */
-function createSpecies(props) {
+export type SpeciesProps = {
+  id?: number | null;
+  authorId: number;
+  name: string;
+  rarityScore?: number;
+  createdAt?: Date;
+};
+
+export function createSpecies(props: SpeciesProps) {
   return {
     id: props.id ?? null,
     authorId: props.authorId,
@@ -14,9 +18,5 @@ function createSpecies(props) {
     createdAt: props.createdAt ?? new Date(),
   };
 }
-
-module.exports = {
-  createSpecies,
-};
 
 

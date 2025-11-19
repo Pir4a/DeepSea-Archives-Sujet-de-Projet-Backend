@@ -4,7 +4,7 @@ const observationController = require('../controllers/observationController');
 /**
  * Routes HTTP pour les observations et leur validation.
  */
-function registerObservationRoutes(app) {
+function registerObservationRoutes(app: any, deps: any) {
   const router = express.Router();
 
   router.post('/observations', observationController.createObservation);

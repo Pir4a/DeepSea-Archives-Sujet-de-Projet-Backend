@@ -5,9 +5,9 @@ const registerObservationRoutes = require('./routes/observationRoutes');
 
 /**
  * Couche interfaces (HTTP) – composition de l'app Express.
- * On injectera plus tard les use cases/domain dans les contrôleurs.
+ * On injectera plus tard les use cases/domain dans les contrôleurs via deps.
  */
-function createApp(deps = {}) {
+function createApp(deps: any = {}) {
   const app = express();
   app.use(express.json());
 

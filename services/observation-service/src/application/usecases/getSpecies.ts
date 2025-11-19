@@ -1,12 +1,8 @@
 // Use case : récupérer une Species par id.
 
-async function execute(/* deps, input */) {
+export async function execute(/* deps: any, input: any */): Promise<any> {
   // TODO: injecter un SpeciesRepository, retourner la species ou null.
   throw new Error('getSpecies use case not implemented yet');
 }
-
-module.exports = {
-  execute,
-};
 
 

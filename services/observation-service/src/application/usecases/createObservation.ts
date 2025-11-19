@@ -4,13 +4,9 @@
 // - dangerLevel entre 1 et 5
 // - délai de 5 minutes entre deux observations de la même espèce pour un auteur
 
-async function execute(/* deps, input */) {
+export async function execute(/* deps: any, input: any */): Promise<any> {
   // TODO: injecter un ObservationRepository, vérifier les règles métier, créer l'observation.
   throw new Error('createObservation use case not implemented yet');
 }
-
-module.exports = {
-  execute,
-};
 
 
