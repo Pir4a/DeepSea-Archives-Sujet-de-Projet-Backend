@@ -1,0 +1,30 @@
+{
+  "name": "@deepsea/observation-service",
+  "version": "0.1.0",
+  "description": "DeepSea Archives observation-service (species, observations, validations)",
+  "main": "dist/server.js",
+  "license": "MIT",
+  "type": "commonjs",
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/server.js",
+    "test": "node -e \"console.log('observation-service tests placeholder')\"",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:generate": "prisma generate"
+  },
+  "dependencies": {
+    "@deepsea/common": "file:../../packages/common",
+    "@prisma/client": "^5.20.0",
+    "express": "^4.21.0"
+  },
+  "devDependencies": {
+    "prisma": "^5.20.0",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.6.3",
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.7.4"
+  }
+}
+
+

@@ -1,5 +1,5 @@
-const { verifyToken } = require('../lib/jwt');
-const AppError = require('../lib/AppError');
+import { verifyToken } from '../lib/jwt';
+import AppError from '../lib/AppError';
 
 /**
  * Middleware d'authentification générique.
@@ -7,7 +7,7 @@ const AppError = require('../lib/AppError');
  * - Vérifie le JWT
  * - Place le payload dans req.user
  */
-function authMiddleware(req, res, next) {
+export function authMiddleware(req: any, res: any, next: any) {
   const authHeader = req.headers.authorization || '';
   const [scheme, token] = authHeader.split(' ');
 
@@ -17,7 +17,7 @@ function authMiddleware(req, res, next) {
 
   try {
     const payload = verifyToken(token);
-    req.user = payload;
+    (req as any).user = payload;
     return next();
   } catch (err) {
     return next(err);
@@ -28,8 +28,8 @@ function authMiddleware(req, res, next) {
  * Middleware de vérification de rôle (USER, EXPERT, ADMIN, etc.)
  * Exemple d'utilisation: app.get('/admin', authMiddleware, requireRole('ADMIN'), handler)
  */
-function requireRole(...allowedRoles) {
-  return (req, res, next) => {
+export function requireRole(...allowedRoles: string[]) {
+  return (req: any, res: any, next: any) => {
     if (!req.user) {
       return next(new AppError('Authentication required', 401));
     }
@@ -39,10 +39,5 @@ function requireRole(...allowedRoles) {
     return next();
   };
 }
-
-module.exports = {
-  authMiddleware,
-  requireRole,
-};
 
 
