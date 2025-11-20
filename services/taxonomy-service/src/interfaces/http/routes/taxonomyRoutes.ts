@@ -1,4 +1,5 @@
 import express from 'express';
+import { auth } from '@deepsea/common';
 import * as taxonomyController from '../controllers/TaxonomyController';
 import { GetTaxonomyStatsDeps } from '../../../application/usecases/GetTaxonomyStats';
 
@@ -30,7 +31,7 @@ export default function registerTaxonomyRoutes(
    *                 data:
    *                   $ref: '#/components/schemas/TaxonomyStats'
    */
-  router.get('/taxonomy/stats', taxonomyController.getStats(deps));
+  router.get('/taxonomy/stats', auth.authMiddleware, taxonomyController.getStats(deps));
 
   app.use('/', router);
 }

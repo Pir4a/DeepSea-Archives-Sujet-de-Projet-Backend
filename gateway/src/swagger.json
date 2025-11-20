@@ -288,6 +288,7 @@
     },
     "/taxonomy/stats": {
       "get": {
+        "security": [{ "bearerAuth": [] }],
         "tags": ["Taxonomy"],
         "summary": "Get taxonomy statistics",
         "responses": {
