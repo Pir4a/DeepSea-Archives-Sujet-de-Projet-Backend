@@ -1,32 +1,36 @@
-FROM node:20-alpine AS base
+FROM node:20 AS base
 
+# On travaille à la racine du monorepo dans l'image
 WORKDIR /app
 
-# Installer les dépendances
-COPY package*.json tsconfig.json ./
-COPY prisma ./prisma
+# Copier le package commun et le service d'observation
+COPY packages/common ./packages/common
+COPY services/observation-service/package*.json services/observation-service/tsconfig.json ./services/observation-service/
+COPY services/observation-service/prisma ./services/observation-service/prisma
+COPY services/observation-service/src ./services/observation-service/src
+# Scripts utilitaires (ex: génération de token ADMIN pour Swagger)
+COPY services/observation-service/scripts ./services/observation-service/scripts
 
-# On ignore le package-lock pour éviter les bugs npm dans le container
-RUN rm -f package-lock.json && npm install
+# Installer les dépendances du service (incluant @deepsea/common en file:../../packages/common)
+WORKDIR /app/services/observation-service
+RUN npm install
 RUN npx prisma generate
 
-# Copier le code source et builder le projet TypeScript
-COPY src ./src
+# Builder le projet TypeScript
 RUN npm run build
 
-FROM node:20-alpine AS production
+FROM node:20 AS production
 
 WORKDIR /app
 
 ENV NODE_ENV=production
 
-# Copier les dépendances et le code compilé
-COPY --from=base /app/node_modules ./node_modules
-COPY --from=base /app/dist ./dist
-COPY --from=base /app/prisma ./prisma
+# Copier le service compilé et le package commun (pour les dépendances file:)
+COPY --from=base /app/services/observation-service ./services/observation-service
+COPY --from=base /app/packages/common ./packages/common
+
+WORKDIR /app/services/observation-service
 
 EXPOSE 4002
 
 CMD ["node", "dist/server.js"]
-
-

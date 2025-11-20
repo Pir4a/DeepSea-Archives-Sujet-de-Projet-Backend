@@ -13,7 +13,7 @@ model Species {
   id           Int           @id @default(autoincrement())
   authorId     Int
   name         String        @unique
-  rarityScore  Float         @default(1)
+  rarityScore  Float         @default(100)
   createdAt    DateTime      @default(now())
   observations Observation[]
 }
@@ -25,12 +25,13 @@ model Observation {
   description  String
   dangerLevel  Int
   status       ObservationStatus @default(PENDING)
-  validatedBy  Int? 
+  validatedBy  Int?
   validatedAt  DateTime?
   createdAt    DateTime @default(now())
   deletedAt    DateTime?
 
-  species      Species  @relation(fields: [speciesId], references: [id])
+  species      Species             @relation(fields: [speciesId], references: [id])
+  history      ObservationHistory[]
 }
 
 enum ObservationStatus {
@@ -39,4 +40,23 @@ enum ObservationStatus {
   REJECTED
 }
 
+model ObservationHistory {
+  id             Int                      @id @default(autoincrement())
+  observationId  Int
+  speciesId      Int
+  authorId       Int
+  action         ObservationHistoryAction
+  payload        Json?
+  performedBy    Int?
+  createdAt      DateTime                 @default(now())
 
+  observation Observation @relation(fields: [observationId], references: [id])
+}
+
+enum ObservationHistoryAction {
+  CREATED
+  VALIDATED
+  REJECTED
+  DELETED
+  RESTORED
+}

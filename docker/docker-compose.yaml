@@ -6,6 +6,9 @@ services:
     environment:
       POSTGRES_USER: deepsea
       POSTGRES_PASSWORD: deepsea
+      POSTGRES_DB: deepsea
+    ports:
+      - '5435:5432'
     volumes:
       - deepsea-postgres-data:/var/lib/postgresql/data
       - ./docker/init-multiple-databases.sh:/docker-entrypoint-initdb.d/init-multiple-databases.sh
@@ -14,37 +17,39 @@ services:
     networks:
       - deepsea-network
 
-  # observation-service:
-  #   build: ../services/observation-service
-  #   container_name: deepsea-observation-service
-  #   restart: unless-stopped
-  #   environment:
-  #     # URL utilisée par Prisma dans observation-service
-  #     DATABASE_URL: postgresql://deepsea:deepsea@postgres:5432/deepsea-observation?schema=public
-  #     JWT_SECRET: super-secret-change-me
-  #     OBSERVATION_SERVICE_PORT: 4002
-  #   depends_on:
-  #     - postgres
-  #   ports:
-  #     - '4002:4002'
-  #   networks:
-  #     - deepsea-network
+  observation-service:
+    build:
+      context: ..
+      dockerfile: services/observation-service/Dockerfile
+    container_name: deepsea-observation-service
+    restart: unless-stopped
+    environment:
+      # URL utilisée par Prisma dans observation-service
+      DATABASE_URL: postgresql://deepsea:deepsea@postgres:5432/deepsea?schema=public
+      JWT_SECRET: super-secret-change-me
+      OBSERVATION_SERVICE_PORT: 4002
+    depends_on:
+      - postgres
+    ports:
+      - '4002:4002'
+    networks:
+      - deepsea-network
 
-  # auth-service:
-  #   build: ../services/auth-service
-  #   container_name: deepsea-auth-service
-  #   restart: unless-stopped
-  #   environment:
-  #     # URL utilisée par Prisma dans observation-service
-  #     DATABASE_URL: postgresql://deepsea:deepsea@postgres:5432/deepsea-auth?schema=public
-  #     JWT_SECRET: super-secret-change-me
-  #     OBSERVATION_SERVICE_PORT: 4003
-  #   depends_on:
-  #     - postgres
-  #   ports:
-  #     - '4003:4003'
-  #   networks:
-  #     - deepsea-network
+  taxonomy-service:
+    build:
+      context: ..
+      dockerfile: services/taxonomy-service/Dockerfile
+    container_name: deepsea-taxonomy-service
+    restart: unless-stopped
+    environment:
+      TAXONOMY_SERVICE_PORT: 4003
+      OBSERVATION_SERVICE_URL: http://observation-service:4002
+    depends_on:
+      - observation-service
+    ports:
+      - '4003:4003'
+    networks:
+      - deepsea-network
 
 networks:
   deepsea-network:
