@@ -8,8 +8,13 @@ export const register = async (req: Request, res: Response) => {
     const { email, username, password } = req.body
 
     // Verification des données
-    if (!email || !username || !password) {
-      return res.status(400).json({ error: "Missing fields" })
+    const missingFields: string[] = [];
+    if (!email) missingFields.push("email");
+    if (!username) missingFields.push("username");
+    if (!password) missingFields.push("password");
+
+    if (missingFields.length > 0) {
+      return res.status(400).json({ error: `Missing fields: ${missingFields.join(", ")}` })
     }
     
     // Création de l'utilisateur
