@@ -12,8 +12,23 @@ services:
     volumes:
       - deepsea-postgres-data:/var/lib/postgresql/data
       - ./docker/init-multiple-databases.sh:/docker-entrypoint-initdb.d/init-multiple-databases.sh
+    networks:
+      - deepsea-network
+
+  auth-service:
+    build:
+      context: ..
+      dockerfile: services/auth-service/Dockerfile
+    container_name: deepsea-auth-service
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://deepsea:deepsea@postgres:5432/deepsea?schema=auth
+      PORT: 3001
+      JWT_SECRET: super-secret-change-me
+    depends_on:
+      - postgres
     ports:
-      - "5432:5432"
+      - '3001:3001'
     networks:
       - deepsea-network
 
