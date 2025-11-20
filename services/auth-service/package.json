@@ -10,10 +10,11 @@
     "dev": "nodemon src/server.ts",
     "build": "tsc",
     "start": "node.js",
-    "generate": "prisma generate",
-    "migrate": "prisma migrate dev"
+    "generate": "prisma generate --schema=src/prisma/schema.prisma",
+    "migrate": "prisma migrate dev --schema=src/prisma/schema.prisma"
   },
   "dependencies": {
+    "@deepsea/common": "file:../../packages/common",
     "@prisma/client": "^6.19.0",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",

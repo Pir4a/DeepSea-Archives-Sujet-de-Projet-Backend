@@ -9,13 +9,17 @@ dotenv.config()
 import authRoutes from "./routes/authRoutes"
 import adminRoutes from "./routes/adminRoutes"
 
+import path from "path"
+
 const app = express()
 
 app.use(cors())
 app.use(express.json())
 
-
-const swaggerDoc = YAML.load(__dirname + "/swagger/auth.yaml")
+// Use path.join to reliably resolve the swagger file path relative to the current directory
+// In production (dist/), __dirname points to dist/. In dev (src/), it points to src/.
+const swaggerPath = path.join(__dirname, "swagger", "auth.yaml")
+const swaggerDoc = YAML.load(swaggerPath)
 
 // Route /docs
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDoc))
