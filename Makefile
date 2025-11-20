@@ -6,18 +6,18 @@ COMPOSE = docker-compose -f $(DOCKER_DIR)/docker-compose.yaml
 
 # Start all services
 up:
-	cd $(DOCKER_DIR) && $(COMPOSE) up -d --build
+	 $(COMPOSE) up -d --build
 
 # Stop all services
 down:
-	cd $(DOCKER_DIR) && $(COMPOSE) down
+	 $(COMPOSE) down
 
 # Restart all services
 restart: down up
 
 # View logs
 logs:
-	cd $(DOCKER_DIR) && $(COMPOSE) logs -f
+	 $(COMPOSE) logs -f
 
 # Run tests for all services (locally)
 test:
@@ -32,9 +32,9 @@ test:
 
 # Build images without starting
 build:
-	cd $(DOCKER_DIR) && $(COMPOSE) build
+	 $(COMPOSE) build
 
 # Clean up docker resources
 clean:
-	cd $(DOCKER_DIR) && $(COMPOSE) down -v --remove-orphans
+	 $(COMPOSE) down -v --remove-orphans
 
