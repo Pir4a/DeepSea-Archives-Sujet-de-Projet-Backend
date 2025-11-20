@@ -1,0 +1,312 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "DeepSea Archives API Gateway",
+    "version": "1.0.0",
+    "description": "Unified API documentation for DeepSea Archives services (Auth, Observation, Taxonomy)"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:4000",
+      "description": "Local Gateway"
+    }
+  ],
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Register a new user",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": { "type": "string" },
+                  "password": { "type": "string" },
+                  "name": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "User created" }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Login user",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": { "type": "string" },
+                  "password": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Login successful" }
+        }
+      }
+    },
+    "/auth/me": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "Get current user info",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "User info retrieved" }
+        }
+      }
+    },
+    "/admin/users": {
+      "get": {
+        "tags": ["Admin"],
+        "summary": "List all users (Admin only)",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "List of users" },
+          "403": { "description": "Forbidden" }
+        }
+      }
+    },
+    "/admin/users/{id}/role": {
+      "patch": {
+        "tags": ["Admin"],
+        "summary": "Update user role (Admin only)",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "role": { "type": "string", "enum": ["USER", "EXPERT", "ADMIN"] }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Role updated" }
+        }
+      }
+    },
+    "/species": {
+      "get": {
+        "tags": ["Species"],
+        "summary": "List all species",
+        "parameters": [
+          { "name": "sortBy", "in": "query", "schema": { "type": "string", "enum": ["createdAt", "rarityScore"] } },
+          { "name": "order", "in": "query", "schema": { "type": "string", "enum": ["asc", "desc"] } },
+          { "name": "minRarity", "in": "query", "schema": { "type": "number" } }
+        ],
+        "responses": {
+          "200": { "description": "List of species" }
+        }
+      },
+      "post": {
+        "tags": ["Species"],
+        "summary": "Create a new species",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "description": { "type": "string" },
+                  "rarityScore": { "type": "number" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Species created" }
+        }
+      }
+    },
+    "/species/{id}": {
+      "get": {
+        "tags": ["Species"],
+        "summary": "Get a species by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Species details" },
+          "404": { "description": "Species not found" }
+        }
+      }
+    },
+    "/species/{id}/observations": {
+      "get": {
+        "tags": ["Observations"],
+        "summary": "List observations for a species",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } },
+          { "name": "status", "in": "query", "schema": { "type": "string" } },
+          { "name": "includeDeleted", "in": "query", "schema": { "type": "boolean" } }
+        ],
+        "responses": {
+          "200": { "description": "List of observations" }
+        }
+      }
+    },
+    "/observations": {
+      "get": {
+        "tags": ["Observations"],
+        "summary": "List observations",
+        "responses": {
+          "200": { "description": "List of observations" }
+        }
+      },
+      "post": {
+        "tags": ["Observations"],
+        "summary": "Create an observation",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "speciesId": { "type": "integer" },
+                  "imageUrl": { "type": "string" },
+                  "latitude": { "type": "number" },
+                  "longitude": { "type": "number" },
+                  "depth": { "type": "number" },
+                  "description": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Observation created" }
+        }
+      }
+    },
+    "/observations/{id}/validate": {
+      "post": {
+        "tags": ["Observations"],
+        "summary": "Validate an observation",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Observation validated" }
+        }
+      }
+    },
+    "/observations/{id}/reject": {
+      "post": {
+        "tags": ["Observations"],
+        "summary": "Reject an observation",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "reason": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Observation rejected" }
+        }
+      }
+    },
+    "/observations/history": {
+      "get": {
+        "tags": ["Observations"],
+        "summary": "List observation history (Expert/Admin)",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "speciesId", "in": "query", "schema": { "type": "integer" } },
+          { "name": "observationId", "in": "query", "schema": { "type": "integer" } },
+          { "name": "limit", "in": "query", "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "History list" },
+          "403": { "description": "Forbidden" }
+        }
+      }
+    },
+    "/observations/{id}": {
+      "delete": {
+        "tags": ["Observations"],
+        "summary": "Soft delete an observation (Expert/Admin)",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Observation deleted" }
+        }
+      }
+    },
+    "/observations/{id}/restore": {
+      "post": {
+        "tags": ["Observations"],
+        "summary": "Restore a soft-deleted observation (Expert/Admin)",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Observation restored" }
+        }
+      }
+    },
+    "/taxonomy/stats": {
+      "get": {
+        "tags": ["Taxonomy"],
+        "summary": "Get taxonomy statistics",
+        "responses": {
+          "200": { "description": "Statistics retrieved" }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
