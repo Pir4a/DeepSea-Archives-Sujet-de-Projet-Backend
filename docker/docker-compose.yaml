@@ -22,7 +22,7 @@ services:
     container_name: deepsea-pgadmin
     restart: unless-stopped
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@deepsea.local
+      PGADMIN_DEFAULT_EMAIL: admin@deepsea.com
       PGADMIN_DEFAULT_PASSWORD: admin
     ports:
       - '5050:80'
@@ -46,6 +46,22 @@ services:
       - postgres
     ports:
       - '4002:4002'
+    networks:
+      - deepsea-network
+
+  taxonomy-service:
+    build:
+      context: ..
+      dockerfile: services/taxonomy-service/Dockerfile
+    container_name: deepsea-taxonomy-service
+    restart: unless-stopped
+    environment:
+      TAXONOMY_SERVICE_PORT: 4003
+      OBSERVATION_SERVICE_URL: http://observation-service:4002
+    depends_on:
+      - observation-service
+    ports:
+      - '4003:4003'
     networks:
       - deepsea-network
 
