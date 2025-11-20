@@ -24,7 +24,7 @@
                 "properties": {
                   "email": { "type": "string" },
                   "password": { "type": "string" },
-                  "name": { "type": "string" }
+                  "username": { "type": "string" }
                 }
               }
             }
@@ -111,6 +111,7 @@
     "/species": {
       "get": {
         "tags": ["Species"],
+        "security": [{ "bearerAuth": [] }],
         "summary": "List all species",
         "parameters": [
           { "name": "sortBy", "in": "query", "schema": { "type": "string", "enum": ["createdAt", "rarityScore"] } },
@@ -147,6 +148,7 @@
     "/species/{id}": {
       "get": {
         "tags": ["Species"],
+        "security": [{ "bearerAuth": [] }],
         "summary": "Get a species by ID",
         "parameters": [
           {
@@ -165,6 +167,7 @@
     "/species/{id}/observations": {
       "get": {
         "tags": ["Observations"],
+        "security": [{ "bearerAuth": [] }],
         "summary": "List observations for a species",
         "parameters": [
           { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } },
@@ -177,13 +180,6 @@
       }
     },
     "/observations": {
-      "get": {
-        "tags": ["Observations"],
-        "summary": "List observations",
-        "responses": {
-          "200": { "description": "List of observations" }
-        }
-      },
       "post": {
         "tags": ["Observations"],
         "summary": "Create an observation",
