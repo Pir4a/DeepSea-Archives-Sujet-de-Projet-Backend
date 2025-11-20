@@ -1,6 +1,7 @@
 import express from 'express';
 import swaggerUi from 'swagger-ui-express';
 import { auth, errorHandler, notFoundHandler } from '@deepsea/common';
+import { enrichUserFromAuthService } from './middlewares/authEnricher';
 import registerSpeciesRoutes from './routes/speciesRoutes';
 import registerObservationRoutes from './routes/observationRoutes';
 import { swaggerSpec } from './swagger';
@@ -42,6 +43,9 @@ export function createApp(deps: Partial<ObservationServiceDeps> = {}) {
 
   // Toutes les opérations utilisateur doivent être protégées par JWT.
   app.use(auth.authMiddleware);
+  
+  // Enrich user data (role/reputation) from Auth Service for fresh state
+  app.use(enrichUserFromAuthService);
 
   // Routes principales
   registerSpeciesRoutes(app, resolvedDeps);

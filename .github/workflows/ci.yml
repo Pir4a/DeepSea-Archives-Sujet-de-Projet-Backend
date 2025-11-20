@@ -1,0 +1,52 @@
+name: DeepSea CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+
+    # Build Shared Common Package first
+    - name: Build Common Package
+      run: |
+        cd packages/common
+        npm install
+        npm run build
+
+    # Auth Service
+    - name: Auth Service - Install & Test
+      run: |
+        cd services/auth-service
+        npm install
+        npx prisma generate --schema=src/prisma/schema.prisma
+        npm run build
+        npm test
+
+    # Observation Service
+    - name: Observation Service - Install & Test
+      run: |
+        cd services/observation-service
+        npm install
+        npx prisma generate
+        npm run build
+        npm test
+
+    # Taxonomy Service
+    - name: Taxonomy Service - Install & Test
+      run: |
+        cd services/taxonomy-service
+        npm install
+        npm run build
+        npm test

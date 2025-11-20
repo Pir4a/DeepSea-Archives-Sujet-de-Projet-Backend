@@ -12,16 +12,24 @@ const AppError_1 = __importDefault(require("../lib/AppError"));
  * - Lit le header Authorization: Bearer <token>
  * - Vérifie le JWT
  * - Place le payload dans req.user
+ * - Optionnel: valide le token auprès du service d'auth
  */
 function authMiddleware(req, res, next) {
     const authHeader = req.headers.authorization || '';
     const [scheme, token] = authHeader.split(' ');
+    // Exempt swagger docs from auth
+    if (req.path.startsWith('/api-docs')) {
+        return next();
+    }
     if (scheme !== 'Bearer' || !token) {
         return next(new AppError_1.default('Authentication required', 401));
     }
     try {
         const payload = (0, jwt_1.verifyToken)(token);
         req.user = payload;
+        // Note: Ideally we would validate against auth service here if token revocation is needed
+        // but for performance we trust the JWT signature + expiration for basic auth.
+        // Role checks might need fresher data depending on policy.
         return next();
     }
     catch (err) {

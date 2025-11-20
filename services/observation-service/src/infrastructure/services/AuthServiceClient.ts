@@ -21,6 +21,7 @@ export class AuthServiceClient implements AuthServicePort {
     }
 
     try {
+      // Updated to point to /internal/reputation route which we will create
       const response = await fetch(`${this.baseUrl}/internal/reputation`, {
         method: 'POST',
         headers: {
@@ -41,5 +42,21 @@ export class AuthServiceClient implements AuthServicePort {
       });
     }
   }
-}
 
+  async getUserProfile(token: string): Promise<{ id: number; role: string; reputation: number } | null> {
+    if (!this.baseUrl) return null;
+    try {
+      const response = await fetch(`${this.baseUrl}/auth/me`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (!response.ok) return null;
+      return await response.json();
+    } catch (error) {
+      logger.error('auth_service_profile_check_failed', { error });
+      return null;
+    }
+  }
+}

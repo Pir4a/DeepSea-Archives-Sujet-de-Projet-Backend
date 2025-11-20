@@ -2,16 +2,16 @@
 
 ```mermaid
 graph TD
-    Client[Client (Web/Mobile)]
+    Client[Client (Web/Mobile/Postman)]
 
-    subgraph Gateway Layer
-        Gateway[API Gateway (To be Implemented)]
+    subgraph Entry Point
+        Gateway[API Gateway (Port 4000)]
     end
 
     subgraph Services
-        Auth[Auth Service]
-        Obs[Observation Service]
-        Tax[Taxonomy Service]
+        Auth[Auth Service (3001)]
+        Obs[Observation Service (4002)]
+        Tax[Taxonomy Service (4003)]
     end
 
     subgraph Databases
@@ -22,8 +22,8 @@ graph TD
     %% Client interaction
     Client -- HTTP Request --> Gateway
 
-    %% Gateway routing (conceptual)
-    Gateway -- /auth/* --> Auth
+    %% Gateway routing
+    Gateway -- /auth/*, /admin/* --> Auth
     Gateway -- /species, /observations --> Obs
     Gateway -- /taxonomy/* --> Tax
 
@@ -32,10 +32,7 @@ graph TD
     Obs -- Read/Write --> ObsDB
     
     %% Inter-service communication
-    Obs -- Validate Token (Internal/Shared Lib) --> Auth
+    Obs -- Enrich User (GET /auth/me) --> Auth
+    Obs -- Reputation Update (POST /internal/reputation) --> Auth
     Tax -- Fetch Data (REST) --> Obs
-
-    %% Details
-    Obs -- Webhook/Event (Future) --> Auth
 ```
-

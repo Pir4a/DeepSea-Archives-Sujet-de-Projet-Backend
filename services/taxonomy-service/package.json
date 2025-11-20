@@ -8,25 +8,27 @@
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "build": "tsc -p tsconfig.json",
     "start": "node dist/server.js",
-    "test": "echo 'taxonomy-service tests placeholder'"
+    "test": "jest"
   },
   "dependencies": {
     "@deepsea/common": "file:../../packages/common",
-    "express": "^4.21.0",
     "cors": "^2.8.5",
+    "express": "^4.21.0",
     "node-fetch": "^2.6.12",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
-    "@types/express": "^4.17.21",
     "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/jest": "^30.0.0",
     "@types/node": "^22.7.4",
     "@types/node-fetch": "^2.6.4",
     "@types/swagger-jsdoc": "^6.0.1",
     "@types/swagger-ui-express": "^4.1.6",
+    "jest": "^30.2.0",
+    "ts-jest": "^29.4.5",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.6.3"
   }
 }
-

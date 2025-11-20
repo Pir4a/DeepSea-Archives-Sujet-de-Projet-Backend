@@ -10,5 +10,5 @@ export type ReputationEvent = {
 
 export interface AuthServicePort {
   sendReputationDelta(event: ReputationEvent): Promise<void>;
+  getUserProfile(token: string): Promise<{ id: number; role: string; reputation: number } | null>;
 }
-

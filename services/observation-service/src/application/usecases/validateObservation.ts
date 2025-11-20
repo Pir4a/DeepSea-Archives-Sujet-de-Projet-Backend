@@ -4,8 +4,8 @@ import { AppError } from '@deepsea/common';
 import type { ObservationRepository } from '../../domain/repositories/ObservationRepository';
 import type { AuthServicePort } from '../ports/AuthServicePort';
 
-const AUTHOR_REWARD = 5;
-const VALIDATOR_REWARD = 2;
+const AUTHOR_REWARD = 3;
+const VALIDATOR_REWARD = 1;
 
 export type ValidateObservationDeps = {
   observationRepository: ObservationRepository;
