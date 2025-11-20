@@ -14,7 +14,7 @@
     "prisma:generate": "prisma generate"
   },
   "dependencies": {
-    "@deepsea/common": "file:../../packages/common",
+    "@deepsea/common": "file:packages/common",
     "@prisma/client": "^5.20.0",
     "express": "^4.21.0",
     "node-fetch": "^2.6.12",

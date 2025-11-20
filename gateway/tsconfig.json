@@ -8,6 +8,14 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "paths": {
+      "@deepsea/common": [
+        "../packages/common/dist"
+      ],
+      "@deepsea/common/*": [
+        "../packages/common/dist/*"
+      ]
+    }
   }
 }

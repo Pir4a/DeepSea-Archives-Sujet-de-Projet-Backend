@@ -65,7 +65,7 @@ export default function registerObservationRoutes(
    *         name: status
    *         schema:
    *           type: string
-   *         description: Filter by status (comma-separated: PENDING,VALIDATED,REJECTED)
+   *         description: "Filter by status (comma-separated: PENDING,VALIDATED,REJECTED)"
    *       - in: query
    *         name: includeDeleted
    *         schema:

@@ -2,38 +2,41 @@ FROM node:20 AS base
 
 WORKDIR /app
 
-# Copy common package
+# Build the shared common package
 COPY packages/common ./packages/common
+RUN cd packages/common && npm install && npm run build
 
-# Copy auth service
-COPY services/auth-service/package*.json ./services/auth-service/
-COPY services/auth-service/tsconfig.json ./services/auth-service/
-COPY services/auth-service/src ./services/auth-service/src
+# --- AUTH SERVICE SOURCES ---
+COPY services/auth-service/package*.json ./auth/
+COPY services/auth-service/tsconfig.json ./auth/
+COPY services/auth-service/src/swagger ./auth/swagger
+COPY services/auth-service/src ./auth/src
 
-WORKDIR /app/services/auth-service
+# --- INSTALL + BUILD ---
+WORKDIR /app/auth
 RUN npm install
-
-# Generate Prisma client
-# Note: schema is in src/prisma/schema.prisma based on file exploration
 RUN npx prisma generate --schema=./src/prisma/schema.prisma
-
 RUN npm run build
 
-# Copy static assets that aren't compiled by tsc (like swagger yaml)
-COPY services/auth-service/src/swagger ./dist/swagger
+# --- UNIFY ALL BUILD OUTPUT INTO /app/dist ---
+RUN mkdir -p /app/dist
+RUN cp -r /app/auth/dist/* /app/dist/
 
-FROM node:20 AS production
+# ----------------------------------------
+# PRODUCTION IMAGE
+# ----------------------------------------
+FROM node:20
 
 WORKDIR /app
 
 ENV NODE_ENV=production
 
-COPY --from=base /app/services/auth-service ./services/auth-service
-COPY --from=base /app/packages/common ./packages/common
-
-WORKDIR /app/services/auth-service
+# Copy the fully built dist + common + node_modules
+COPY --from=base /app/auth/node_modules ./node_modules
+COPY --from=base /app/dist ./dist
+COPY --from=base /app/packages ./packages
+COPY --from=base /app/auth/swagger ./dist/swagger
 
 EXPOSE 3001
 
-CMD ["sh", "-c", "npx prisma migrate deploy --schema=./src/prisma/schema.prisma && node dist/server.js"]
-
+CMD ["node", "dist/server.js"]
