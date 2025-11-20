@@ -4,20 +4,25 @@
 
 ## 🏗 Architecture
 
-Le projet est construit en utilisant une **Architecture Microservices** avec les principes de l'**Architecture Hexagonale** au sein de chaque service.
+Le projet est construit en utilisant une **Architecture Microservices** avec les principes de l'**Architecture Hexagonale** au sein de chaque service, exposés via une **API Gateway** unifiée.
 
 ### Services
 
-1.  **Auth Service** (`@deepsea/auth-service`) - *Implémentation en attente*
-    *   Gère l'inscription, la connexion, les rôles (USER, EXPERT, ADMIN) et la réputation.
-    *   Stack : Node.js, Express, Prisma, PostgreSQL.
+1.  **Gateway** (`@deepsea/gateway`) - **Port 4000**
+    *   Point d'entrée unique pour toutes les requêtes.
+    *   Redirige vers les microservices appropriés.
+    *   Stack : Node.js, Express, Http-Proxy.
 
-2.  **Observation Service** (`@deepsea/observation-service`)
+2.  **Auth Service** (`@deepsea/auth-service`) - *Interne : 3001*
+    *   Gère l'inscription, la connexion, les rôles (USER, EXPERT, ADMIN) et la réputation.
+    *   Stack : Node.js, Express, Prisma, PostgreSQL (Schema `auth`).
+
+3.  **Observation Service** (`@deepsea/observation-service`) - *Interne : 4002*
     *   Gère le catalogue des espèces et les observations sur le terrain.
     *   Gère les flux de validation (valider/rejeter les observations).
-    *   Stack : Node.js, Express, Prisma, PostgreSQL.
+    *   Stack : Node.js, Express, Prisma, PostgreSQL (Schema `public`).
 
-3.  **Taxonomy Service** (`@deepsea/taxonomy-service`)
+4.  **Taxonomy Service** (`@deepsea/taxonomy-service`) - *Interne : 4003*
     *   **Moteur d'Analyse** : Agrège les données du Service d'Observation.
     *   Calcule les statistiques, les mots-clés et la classification (COMMUN, RARE, LÉGENDAIRE).
     *   Stack : Node.js, Express (Stateless).
@@ -25,9 +30,9 @@ Le projet est construit en utilisant une **Architecture Microservices** avec les
 ### Infrastructure
 
 *   **Docker Compose** : Orchestre tous les services et bases de données.
-*   **PostgreSQL** : Base de données principale (séparation des schémas ou instances distinctes).
+*   **PostgreSQL** : Base de données principale partagée (séparation par schémas `auth` et `public`).
 *   **Prisma** : ORM pour l'interaction avec la base de données.
-*   **Swagger** : Documentation de l'API.
+*   **Swagger** : Documentation de l'API (accessible via Gateway).
 
 ## 🚀 Pour Commencer
 
@@ -38,39 +43,62 @@ Le projet est construit en utilisant une **Architecture Microservices** avec les
 
 ### Lancer la Stack
 
-1.  **Démarrer tous les services** :
-    ```bash
-    cd DeepSea/docker
-    docker-compose up --build
-    ```
+Le moyen le plus simple est d'utiliser le `Makefile` à la racine :
 
-2.  **Accéder aux APIs** :
-    *   **Observation Service** : `http://localhost:4002`
-        *   Swagger : `http://localhost:4002/api-docs`
-    *   **Taxonomy Service** : `http://localhost:4003`
-        *   Swagger : `http://localhost:4003/api-docs`
-    *   **PgAdmin** (Interface Base de Données) : `http://localhost:5050`
-        *   Email : `admin@deepsea.com`
-        *   Mot de passe : `admin`
+```bash
+make up
+```
 
-### Commandes de Développement
+Ou manuellement :
+```bash
+cd DeepSea/docker
+docker-compose up --build -d
+```
 
-Exécutez ces commandes depuis la racine ou les répertoires spécifiques des services :
+### Accéder aux APIs (Gateway - Port 4000)
 
-*   `npm install` : Installer les dépendances.
-*   `npm run dev` : Démarrer en mode développement (avec rechargement à chaud).
-*   `npx prisma generate` : Générer le client Prisma (dans `observation-service` ou `auth-service`).
-*   `npx prisma migrate dev` : Exécuter les migrations de base de données.
+Toutes les requêtes doivent passer par `http://localhost:4000`.
+
+*   **Auth** : `POST http://localhost:4000/auth/login`
+*   **Observations** : `GET http://localhost:4000/observations`
+*   **Taxonomy** : `GET http://localhost:4000/taxonomy/stats`
+
+#### Documentation Swagger
+
+Les documentations Swagger sont accessibles directement sur les ports des services (mappage Docker) :
+*   **Auth** : `http://localhost:3001/docs`
+*   **Observation** : `http://localhost:4002/api-docs`
+*   **Taxonomy** : `http://localhost:4003/api-docs`
+
+#### Outils d'Administration
+*   **PgAdmin** : `http://localhost:5050`
+    *   Email : `admin@deepsea.com`
+    *   Mot de passe : `admin`
+
+## 🛠 Commandes de Développement
+
+Utilisez le **Makefile** à la racine du projet :
+
+*   `make up` : Construire et démarrer tout.
+*   `make down` : Arrêter tout.
+*   `make logs` : Voir les logs en temps réel.
+*   `make test` : Lancer les tests unitaires de tous les services.
+*   `make clean` : Tout arrêter et supprimer les volumes (reset DB).
 
 ## 📚 Documentation
 
-*   **Flux d'Architecture** : Voir [docs/architecture_flow.md](docs/architecture_flow.md) pour un diagramme Mermaid.
-*   **Docs API** : Disponibles via l'interface Swagger sur les services en cours d'exécution.
+*   **Flux d'Architecture** : [docs/architecture_flow.md](docs/architecture_flow.md) (Diagramme Mermaid).
+*   **Schéma de Base de Données** : [docs/database_schema.md](docs/database_schema.md) (Description des tables et relations).
+*   **Collection Postman** : [docs/DeepSea_Postman_Collection.json](docs/DeepSea_Postman_Collection.json).
 
 ## 🧪 Tests
 
-*   **Tests Unitaires** : `npm test` (par service).
-*   **Intégration** : Lancez la stack complète via Docker et utilisez Postman/Insomnia.
+L'intégration continue (CI) est configurée via GitHub Actions pour tester tous les services à chaque push.
+Pour tester localement :
+
+```bash
+make test
+```
 
 ## 👥 Contributeurs
 

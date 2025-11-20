@@ -14,12 +14,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:4002/species",
+							"raw": "http://localhost:4000/species",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "4002",
+							"port": "4000",
 							"path": [
 								"species"
 							]
@@ -43,12 +43,12 @@
 							"raw": "{\n    \"name\": \"Abyssal Jellyfish\",\n    \"authorId\": 1,\n    \"rarityScore\": 85\n}"
 						},
 						"url": {
-							"raw": "http://localhost:4002/species",
+							"raw": "http://localhost:4000/species",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "4002",
+							"port": "4000",
 							"path": [
 								"species"
 							]
@@ -72,12 +72,12 @@
 							"raw": "{\n    \"speciesId\": 1,\n    \"authorId\": 2,\n    \"description\": \"Glowing tentacles seen in the dark.\",\n    \"dangerLevel\": 3\n}"
 						},
 						"url": {
-							"raw": "http://localhost:4002/observations",
+							"raw": "http://localhost:4000/observations",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "4002",
+							"port": "4000",
 							"path": [
 								"observations"
 							]
@@ -96,12 +96,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:4003/taxonomy/stats",
+							"raw": "http://localhost:4000/taxonomy/stats",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "4003",
+							"port": "4000",
 							"path": [
 								"taxonomy",
 								"stats"

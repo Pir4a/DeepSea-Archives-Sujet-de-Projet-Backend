@@ -2,9 +2,9 @@ import type { ObservationRepository } from '../../domain/repositories/Observatio
 import type { SpeciesRepository } from '../../domain/repositories/SpeciesRepository';
 
 export function calculateRarityScore(observationCount: number): number {
-  const baseScore = 100;
-  const score = baseScore / (1 + observationCount);
-  return Number(Math.max(1, score).toFixed(2));
+  // Formula: rarityScore = (1 + nombreObservationsValidées / 5)
+  const score = 1 + (observationCount / 5);
+  return Number(score.toFixed(2));
 }
 
 export async function recalculateRarityForSpecies(
