@@ -1,39 +1,21 @@
-.PHONY: up down restart logs test build
+COMPOSE = docker compose
 
-# Variables
-COMPOSE = docker-compose -f docker-compose.yaml
-
-# Start all services
 up:
-	 $(COMPOSE) up -d --build
+	$(COMPOSE) up -d
 
-# Stop all services
 down:
-	 $(COMPOSE) down
+	$(COMPOSE) down
 
-# Restart all services
 restart: down up
 
-# View logs
 logs:
-	 $(COMPOSE) logs -f
+	$(COMPOSE) logs -f
 
-# Run tests for all services (locally)
-test:
-	@echo "Testing Common..."
-	cd packages/common && npm test
-	@echo "Testing Auth Service..."
-	cd services/auth-service && npm test || echo "Auth Service tests failed/missing"
-	@echo "Testing Observation Service..."
-	cd services/observation-service && npm test || echo "Observation Service tests failed/missing"
-	@echo "Testing Taxonomy Service..."
-	cd services/taxonomy-service && npm test || echo "Taxonomy Service tests failed/missing"
-
-# Build images without starting
 build:
-	 $(COMPOSE) build
+	$(COMPOSE) build
 
-# Clean up docker resources
+buildup:
+	$(COMPOSE) build && $(COMPOSE) up -d
+
 clean:
-	 $(COMPOSE) down -v --remove-orphans
-
+	$(COMPOSE) down -v --remove-orphans
