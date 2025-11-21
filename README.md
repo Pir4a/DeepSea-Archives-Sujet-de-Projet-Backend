@@ -46,12 +46,11 @@ Le projet est construit en utilisant une **Architecture Microservices** avec les
 Le moyen le plus simple est d'utiliser le `Makefile` à la racine :
 
 ```bash
-make up
+make buildup
 ```
 
 Ou manuellement :
 ```bash
-cd DeepSea/docker
 docker-compose up --build -d
 ```
 
