@@ -10,12 +10,13 @@ RUN cd packages/common && npm install && npm run build
 COPY services/auth-service/package*.json ./auth/
 COPY services/auth-service/tsconfig.json ./auth/
 COPY services/auth-service/src/swagger ./auth/swagger
+COPY services/auth-service/src/prisma ./auth/prisma
 COPY services/auth-service/src ./auth/src
 
 # --- INSTALL + BUILD ---
 WORKDIR /app/auth
 RUN npm install
-RUN npx prisma generate --schema=./src/prisma/schema.prisma
+RUN npx prisma generate --schema=./prisma/schema.prisma
 RUN npm run build
 
 # --- UNIFY ALL BUILD OUTPUT INTO /app/dist ---
@@ -36,7 +37,8 @@ COPY --from=base /app/auth/node_modules ./node_modules
 COPY --from=base /app/dist ./dist
 COPY --from=base /app/packages ./packages
 COPY --from=base /app/auth/swagger ./dist/swagger
+COPY --from=base /app/auth/prisma ./dist/prisma
 
 EXPOSE 3001
 
-CMD ["node", "dist/server.js"]
+CMD ["sh", "-c", "npx prisma migrate deploy --schema=./dist/prisma/schema.prisma && node dist/server.js"]
