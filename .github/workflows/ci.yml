@@ -24,17 +24,14 @@ jobs:
         cd packages/common
         npm install
         npm run build
+        npm link
 
     # Auth Service
     - name: Auth Service - Install & Test
       run: |
-        cd packages/common
-        npm install
-        npm run build
-        cd ..
-        cd ..
         cd services/auth-service
         npm install
+        npm link @deepsea/common
         npx prisma generate --schema=src/prisma/schema.prisma
         npm run build
         npm test
@@ -42,13 +39,9 @@ jobs:
     # Observation Service
     - name: Observation Service - Install & Test
       run: |
-        cd packages/common
-        npm install
-        npm run build
-        cd ..
-        cd ..
         cd services/observation-service
         npm install
+        npm link @deepsea/common
         npx prisma generate
         npm run build
         npm test
@@ -56,12 +49,8 @@ jobs:
     # Taxonomy Service
     - name: Taxonomy Service - Install & Test
       run: |
-        cd packages/common
-        npm install
-        npm run build
-        cd ..
-        cd ..
         cd services/taxonomy-service
         npm install
+        npm link @deepsea/common
         npm run build
         npm test

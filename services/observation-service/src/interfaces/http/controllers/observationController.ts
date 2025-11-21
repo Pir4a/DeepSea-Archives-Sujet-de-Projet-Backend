@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from 'express';
-import { AppError } from '@deepsea/common';
+import { AppError } from "@deepsea/common";
 import { ObservationServiceDeps } from '../../../application/types';
 import type { ObservationStatus } from '../../../domain/entities/Observation';
 import * as createObservationUseCase from '../../../application/usecases/createObservation';

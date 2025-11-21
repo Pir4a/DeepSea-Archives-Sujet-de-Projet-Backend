@@ -1,6 +1,4 @@
 import { execute, CreateObservationDeps } from '../application/usecases/createObservation';
-import { recalculateRarityForSpecies } from '../application/services/rarity';
-import { AppError } from '@deepsea/common';
 
 // Mock Rarity Service
 jest.mock('../application/services/rarity', () => ({
