@@ -69,11 +69,6 @@ Les documentations Swagger sont accessibles directement sur les ports des servic
 *   **Observation** : `http://localhost:4002/api-docs`
 *   **Taxonomy** : `http://localhost:4003/api-docs`
 
-#### Outils d'Administration
-*   **PgAdmin** : `http://localhost:5050`
-    *   Email : `admin@deepsea.com`
-    *   Mot de passe : `admin`
-
 ## 🛠 Commandes de Développement
 
 Utilisez le **Makefile** à la racine du projet :
