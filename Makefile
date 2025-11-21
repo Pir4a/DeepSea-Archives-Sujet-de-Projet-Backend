@@ -1,8 +1,7 @@
 .PHONY: up down restart logs test build
 
 # Variables
-DOCKER_DIR = docker
-COMPOSE = docker-compose -f $(DOCKER_DIR)/docker-compose.yaml
+COMPOSE = docker-compose -f docker-compose.yaml
 
 # Start all services
 up:

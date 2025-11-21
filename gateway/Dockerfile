@@ -4,8 +4,6 @@ WORKDIR /app
 
 # --- COMMON PACKAGE ---
 COPY packages/common ./packages/common
-
-# Installer deps du common et builder
 RUN cd packages/common && npm install && npm run build
 
 # --- GATEWAY PACKAGE ---
@@ -17,18 +15,17 @@ WORKDIR /app/gateway
 RUN npm install
 RUN npm run build
 
+RUN mkdir -p /app/dist
+RUN cp -r /app/gateway/dist/* /app/dist/
+
 # --- PRODUCTION IMAGE ---
 FROM node:20 AS production
 WORKDIR /app
 ENV NODE_ENV=production
 
-# Copier common construit
-COPY --from=base /app/packages/common ./packages/common
-
-# Copier gateway construit
-COPY --from=base /app/gateway ./gateway
-
-WORKDIR /app/gateway
+COPY --from=base /app/gateway/node_modules ./node_modules
+COPY --from=base /app/dist ./dist
+COPY --from=base /app/packages ./packages
 
 EXPOSE 4000
 
