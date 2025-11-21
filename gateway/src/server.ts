@@ -14,7 +14,13 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 
 // Security & Logging
-app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+    hsts: false,
+    crossOriginEmbedderPolicy: false
+  })
+);
 app.use(cors());
 app.use(morgan('dev'));
 

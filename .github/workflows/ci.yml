@@ -24,12 +24,14 @@ jobs:
         cd packages/common
         npm install
         npm run build
+        npm link
 
     # Auth Service
     - name: Auth Service - Install & Test
       run: |
         cd services/auth-service
         npm install
+        npm link @deepsea/common
         npx prisma generate --schema=src/prisma/schema.prisma
         npm run build
         npm test
@@ -39,6 +41,7 @@ jobs:
       run: |
         cd services/observation-service
         npm install
+        npm link @deepsea/common
         npx prisma generate
         npm run build
         npm test
@@ -48,5 +51,6 @@ jobs:
       run: |
         cd services/taxonomy-service
         npm install
+        npm link @deepsea/common
         npm run build
         npm test

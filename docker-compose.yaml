@@ -4,7 +4,7 @@ services:
     container_name: deepsea-postgres
     restart: unless-stopped
     env_file:
-      - ./env/.env.docker
+      - .env
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -14,18 +14,18 @@ services:
       - '5435:5432'
     volumes:
       - deepsea-postgres-data:/var/lib/postgresql/data
-      - ./docker/init-multiple-databases.sh:/docker-entrypoint-initdb.d/init-multiple-databases.sh
+      - ./init-multiple-databases.sh:/docker-entrypoint-initdb.d/init-multiple-databases.sh
     networks:
       - deepsea-network
 
   auth-service:
     build:
-      context: ..
+      context: .
       dockerfile: services/auth-service/Dockerfile
     container_name: deepsea-auth-service
     restart: unless-stopped
     env_file:
-      - ./env/.env.docker
+      - .env
     environment:
       DATABASE_URL: ${AUTH_DATABASE_URL}
       PORT: ${AUTH_PORT}
@@ -39,12 +39,12 @@ services:
 
   observation-service:
     build:
-      context: ..
+      context: .
       dockerfile: services/observation-service/Dockerfile
     container_name: deepsea-observation-service
     restart: unless-stopped
     env_file:
-      - ./env/.env.docker
+      - .env
     environment:
       # URL utilisée par Prisma dans observation-service
       DATABASE_URL: ${OBSERVATION_DATABASE_URL}
@@ -60,12 +60,12 @@ services:
 
   taxonomy-service:
     build:
-      context: ..
+      context: .
       dockerfile: services/taxonomy-service/Dockerfile
     container_name: deepsea-taxonomy-service
     restart: unless-stopped
     env_file:
-      - ./env/.env.docker
+      - .env
     environment:
       TAXONOMY_SERVICE_PORT: ${TAXONOMY_PORT}
       OBSERVATION_SERVICE_URL: ${TAXONOMY_OBSERVATION_SERVICE_URL}
@@ -79,12 +79,12 @@ services:
 
   gateway:
     build:
-      context: ..
+      context: .
       dockerfile: gateway/Dockerfile
     container_name: deepsea-gateway
     restart: unless-stopped
     env_file:
-      - ./env/.env.docker
+      - .env
     environment:
       PORT: ${GATEWAY_PORT}
       AUTH_SERVICE_URL: ${GATEWAY_AUTH_SERVICE_URL}

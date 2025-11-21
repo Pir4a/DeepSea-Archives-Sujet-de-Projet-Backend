@@ -6,7 +6,11 @@
     "outDir": "dist",
     "esModuleInterop": true,
     "strict": false,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "paths": {
+      "@deepsea/common": ["../packages/common/src"],
+      "@deepsea/common/*": ["../packages/common/src/*"]
+    }
   },
   "include": ["src"]
 }
