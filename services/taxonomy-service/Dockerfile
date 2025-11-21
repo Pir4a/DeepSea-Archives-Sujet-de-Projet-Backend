@@ -14,4 +14,4 @@ RUN npm run build
 
 EXPOSE 4002
 
-CMD ["sh", "-c", "npx prisma migrate deploy --schema=./prisma/schema.prisma && node dist/server.js"]
+CMD ["node", "dist/server.js"]
